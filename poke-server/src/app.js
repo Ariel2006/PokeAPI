@@ -1,25 +1,55 @@
 // API de equipos Pokemon.
 //
 // ====================================================================
-//  VERSION 1.0 (ANTES) - contiene fallas de seguridad INTENCIONALES
-//  usadas como objeto de las pruebas del Parcial 1, Actividad 2.
-//  Cada bloque marcado con [VULN-n] se corrige en la version 1.1.
+//  VERSION 1.1 (DESPUES) - fallas corregidas tras las pruebas del
+//  Parcial 1, Actividad 2. Cada bloque [FIX-n] corrige el [VULN-n]
+//  de la version 1.0. Las mismas pruebas que antes fallaban ahora pasan.
 // ====================================================================
 import express from "express";
 import jwt from "jsonwebtoken";
 import crypto from "node:crypto";
 
-// [VULN-1] Secreto JWT embebido en el codigo fuente (CWE-798).
-//          Deberia leerse de una variable de entorno.
-const JWT_SECRET = "pokemon-super-secreto-123";
+// [FIX-1] El secreto se lee de una variable de entorno (CWE-798).
+//         En laboratorio se permite un valor por defecto explicito.
+const JWT_SECRET = process.env.JWT_SECRET || "clave-solo-para-laboratorio";
+const JWT_ALGOS = ["HS256"];
 
-// [VULN-2] Contrasenas en texto plano. Esta funcion "hashea" sin hacer
-//          nada real; se mantiene para que el cambio a la v1.1 sea claro.
+// Limites de dominio para la validacion de entradas.
+const MAX_POKEMON = 6;
+const MAX_POKEMON_ID = 1025; // numero de especies existentes
+const NOMBRE_VALIDO = /^[\w áéíóúñÁÉÍÓÚÑ.-]{1,40}$/;
+
+// [FIX-2] Contrasenas con hash lento y sal (scrypt, CWE-256/916).
+//         Formato almacenado: scrypt$<salt_hex>$<hash_hex>
 function hashPassword(plain) {
-  return plain; // CWE-256: almacenamiento de credenciales sin cifrar
+  const salt = crypto.randomBytes(16);
+  const hash = crypto.scryptSync(plain, salt, 64);
+  return `scrypt$${salt.toString("hex")}$${hash.toString("hex")}`;
 }
 function verifyPassword(plain, stored) {
-  return plain === stored;
+  const [scheme, saltHex, hashHex] = String(stored).split("$");
+  if (scheme !== "scrypt" || !saltHex || !hashHex) return false;
+  const hash = crypto.scryptSync(plain, Buffer.from(saltHex, "hex"), 64);
+  const esperado = Buffer.from(hashHex, "hex");
+  // Comparacion en tiempo constante.
+  return hash.length === esperado.length &&
+    crypto.timingSafeEqual(hash, esperado);
+}
+
+// Validacion reutilizable de un equipo.
+function validarEquipo(name, pokemon) {
+  if (typeof name !== "string" || !NOMBRE_VALIDO.test(name)) {
+    return "El nombre es obligatorio, de 1 a 40 caracteres y sin simbolos peligrosos";
+  }
+  if (!Array.isArray(pokemon) || pokemon.length < 1 || pokemon.length > MAX_POKEMON) {
+    return `El equipo debe tener entre 1 y ${MAX_POKEMON} pokemon`;
+  }
+  for (const id of pokemon) {
+    if (!Number.isInteger(id) || id < 1 || id > MAX_POKEMON_ID) {
+      return `Cada pokemon debe ser un id entero entre 1 y ${MAX_POKEMON_ID}`;
+    }
+  }
+  return null;
 }
 
 export function createApp(db) {
@@ -30,7 +60,8 @@ export function createApp(db) {
     const header = req.headers.authorization || "";
     const token = header.replace("Bearer ", "");
     try {
-      req.user = jwt.verify(token, JWT_SECRET);
+      // [FIX] Se fija la lista de algoritmos permitida (CWE-347).
+      req.user = jwt.verify(token, JWT_SECRET, { algorithms: JWT_ALGOS });
       next();
     } catch {
       res.status(401).json({ error: "Token invalido o ausente" });
@@ -62,46 +93,56 @@ export function createApp(db) {
     if (!user || !verifyPassword(password, user.password)) {
       return res.status(401).json({ error: "Credenciales invalidas" });
     }
-    const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET);
+    const token = jwt.sign(
+      { id: user.id, username: user.username },
+      JWT_SECRET,
+      { algorithm: "HS256", expiresIn: "2h" }
+    );
     res.json({ token });
   });
 
   // --- Listar / buscar equipos del usuario -------------------------
   app.get("/api/teams", auth, (req, res) => {
     const { name } = req.query;
-    // [VULN-3] Inyeccion SQL: el filtro `name` se concatena directamente
-    //          en la consulta (CWE-89). Ademas no filtra por user_id,
-    //          por lo que expone equipos de otros usuarios.
-    let sql = "SELECT * FROM teams WHERE 1=1";
-    if (name) {
-      sql += " AND name LIKE '%" + name + "%'";
-    }
     try {
-      const rows = db.prepare(sql).all();
+      // [FIX-3] Consulta parametrizada (CWE-89) y acotada al dueno:
+      //         solo devuelve los equipos de req.user.
+      let rows;
+      if (name) {
+        rows = db
+          .prepare("SELECT * FROM teams WHERE user_id = ? AND name LIKE ?")
+          .all(req.user.id, `%${name}%`);
+      } else {
+        rows = db
+          .prepare("SELECT * FROM teams WHERE user_id = ?")
+          .all(req.user.id);
+      }
       res.json(rows.map(parseTeam));
-    } catch (e) {
-      // [VULN-4] Fuga de detalles internos en el mensaje de error (CWE-209).
-      res.status(500).json({ error: e.message, sql });
+    } catch {
+      // [FIX-4] Mensaje de error generico, sin detalles internos (CWE-209).
+      res.status(500).json({ error: "Error interno" });
     }
   });
 
   // --- Leer un equipo por id ---------------------------------------
   app.get("/api/teams/:id", auth, (req, res) => {
-    // [VULN-5] IDOR / Broken Access Control (CWE-639): no verifica que el
-    //          equipo pertenezca a req.user. Cualquier usuario autenticado
-    //          puede leer el equipo de otro.
     const team = db
       .prepare("SELECT * FROM teams WHERE id = ?")
       .get(req.params.id);
     if (!team) return res.status(404).json({ error: "Equipo no encontrado" });
+    // [FIX-5] Control de acceso: el equipo debe pertenecer a req.user (CWE-639).
+    if (team.user_id !== req.user.id) {
+      return res.status(403).json({ error: "No autorizado" });
+    }
     res.json(parseTeam(team));
   });
 
   // --- Crear equipo ------------------------------------------------
   app.post("/api/teams", auth, (req, res) => {
     const { name, pokemon } = req.body || {};
-    // [VULN-6] Falta de validacion de entradas (CWE-20): no valida el
-    //          nombre, ni que `pokemon` sea una lista de <=6 ids validos.
+    // [FIX-6] Validacion de entradas antes de persistir (CWE-20).
+    const error = validarEquipo(name, pokemon);
+    if (error) return res.status(400).json({ error });
     const info = db
       .prepare("INSERT INTO teams (user_id, name, pokemon) VALUES (?, ?, ?)")
       .run(req.user.id, name, JSON.stringify(pokemon));
@@ -110,13 +151,15 @@ export function createApp(db) {
 
   // --- Borrar equipo -----------------------------------------------
   app.delete("/api/teams/:id", auth, (req, res) => {
-    // [VULN-5] Mismo IDOR: borra por id sin comprobar el dueno.
-    const info = db
-      .prepare("DELETE FROM teams WHERE id = ?")
-      .run(req.params.id);
-    if (info.changes === 0) {
-      return res.status(404).json({ error: "Equipo no encontrado" });
+    const team = db
+      .prepare("SELECT * FROM teams WHERE id = ?")
+      .get(req.params.id);
+    if (!team) return res.status(404).json({ error: "Equipo no encontrado" });
+    // [FIX-5] Mismo control de dueno antes de borrar (CWE-639).
+    if (team.user_id !== req.user.id) {
+      return res.status(403).json({ error: "No autorizado" });
     }
+    db.prepare("DELETE FROM teams WHERE id = ?").run(req.params.id);
     res.json({ deleted: Number(req.params.id) });
   });
 
@@ -140,4 +183,4 @@ function safeParse(s) {
   }
 }
 
-export const _internal = { hashPassword, verifyPassword, JWT_SECRET };
+export const _internal = { hashPassword, verifyPassword, validarEquipo };

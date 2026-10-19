@@ -1,0 +1,65 @@
+{
+  "herramienta": "dast-scan (propio)",
+  "objetivo": "http://127.0.0.1:<puerto efimero>",
+  "fecha": "2026-10-19T23:09:11.936Z",
+  "total": 7,
+  "vulnerables": 0,
+  "findings": [
+    {
+      "id": "DAST-AUTH",
+      "nombre": "Acceso sin token",
+      "severidad": "info",
+      "cwe": "CWE-306",
+      "estado": "seguro",
+      "evidencia": "GET /api/teams/1 sin Authorization -> HTTP 401"
+    },
+    {
+      "id": "DAST-IDOR-READ",
+      "nombre": "Acceso entre usuarios: lectura de equipo ajeno",
+      "severidad": "alta",
+      "cwe": "CWE-639",
+      "estado": "seguro",
+      "evidencia": "ash (user 1) GET /api/teams/2 (de misty) -> HTTP 403"
+    },
+    {
+      "id": "DAST-IDOR-DELETE",
+      "nombre": "Acceso entre usuarios: borrado de equipo ajeno",
+      "severidad": "alta",
+      "cwe": "CWE-639",
+      "estado": "seguro",
+      "evidencia": "ash DELETE /api/teams/2 (de misty) -> HTTP 403"
+    },
+    {
+      "id": "DAST-SQLI",
+      "nombre": "Inyeccion SQL en filtro de busqueda",
+      "severidad": "alta",
+      "cwe": "CWE-89",
+      "estado": "seguro",
+      "evidencia": "GET /api/teams?name=' OR '1'='1 -> HTTP 200, 0 equipos ajenos devueltos"
+    },
+    {
+      "id": "DAST-INPUT-1",
+      "nombre": "Validacion de entradas: id de pokemon fuera de rango",
+      "severidad": "media",
+      "cwe": "CWE-20",
+      "estado": "seguro",
+      "evidencia": "POST /api/teams {\"name\":\"x\",\"pokemon\":[-5,99999]} -> HTTP 400"
+    },
+    {
+      "id": "DAST-INPUT-2",
+      "nombre": "Validacion de entradas: mas de 6 pokemon",
+      "severidad": "media",
+      "cwe": "CWE-20",
+      "estado": "seguro",
+      "evidencia": "POST /api/teams {\"name\":\"x\",\"pokemon\":[1,2,3,4,5,6,7]} -> HTTP 400"
+    },
+    {
+      "id": "DAST-INPUT-3",
+      "nombre": "Validacion de entradas: nombre con <script>",
+      "severidad": "media",
+      "cwe": "CWE-20",
+      "estado": "seguro",
+      "evidencia": "POST /api/teams {\"name\":\"<script>alert(1)</script>\",\"pokemon\":[1]} -> HTTP 400"
+    }
+  ]
+}
