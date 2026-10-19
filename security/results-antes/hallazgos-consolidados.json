@@ -1,0 +1,366 @@
+{
+  "fecha": "2026-10-19T23:06:17.197Z",
+  "totalCrudos": 45,
+  "totalUnicos": 44,
+  "duplicadosEliminados": 1,
+  "porSeveridad": {
+    "alta": 35,
+    "media": 9
+  },
+  "gate": "FALLA",
+  "motivoGate": "3 vulnerabilidad(es) confirmada(s) alta/critica",
+  "hallazgos": [
+    {
+      "origen": "SAST/semgrep",
+      "regla": "home.claude.ariel2006.pokeapi.security.semgrep.secreto-embebido",
+      "severidad": "alta",
+      "ubicacion": "src/app.js:14",
+      "descripcion": "Secreto embebido en el codigo fuente (CWE-798). Mover a una variable de entorno (process.env).",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SAST/semgrep",
+      "regla": "home.claude.ariel2006.pokeapi.security.semgrep.password-texto-plano",
+      "severidad": "alta",
+      "ubicacion": "src/app.js:22",
+      "descripcion": "La contrasena parece compararse/almacenarse en texto plano (CWE-256/CWE-916). Usar un hash lento con sal (scrypt, bcrypt, argon2).",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SAST/semgrep",
+      "regla": "home.claude.ariel2006.pokeapi.security.semgrep.sqli-concatenacion-string",
+      "severidad": "alta",
+      "ubicacion": "src/app.js:77",
+      "descripcion": "Posible inyeccion SQL (CWE-89): la consulta se arma concatenando una variable. Usar consultas parametrizadas con '?'.",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:@jest/console",
+      "severidad": "alta",
+      "ubicacion": "node_modules/@jest/console",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:@jest/core",
+      "severidad": "alta",
+      "ubicacion": "node_modules/@jest/core",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:@jest/environment",
+      "severidad": "alta",
+      "ubicacion": "node_modules/@jest/environment",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:@jest/expect",
+      "severidad": "alta",
+      "ubicacion": "node_modules/@jest/expect",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:@jest/fake-timers",
+      "severidad": "alta",
+      "ubicacion": "node_modules/@jest/fake-timers",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:@jest/globals",
+      "severidad": "alta",
+      "ubicacion": "node_modules/@jest/globals",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:@jest/reporters",
+      "severidad": "alta",
+      "ubicacion": "node_modules/@jest/reporters",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:@jest/test-result",
+      "severidad": "alta",
+      "ubicacion": "node_modules/@jest/test-result",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:@jest/test-sequencer",
+      "severidad": "alta",
+      "ubicacion": "node_modules/@jest/test-sequencer",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:@jest/transform",
+      "severidad": "alta",
+      "ubicacion": "node_modules/@jest/transform",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:babel-jest",
+      "severidad": "alta",
+      "ubicacion": "node_modules/babel-jest",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:braces",
+      "severidad": "alta",
+      "ubicacion": "node_modules/braces",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:create-jest",
+      "severidad": "alta",
+      "ubicacion": "node_modules/create-jest",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:expect",
+      "severidad": "alta",
+      "ubicacion": "node_modules/expect",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:jest",
+      "severidad": "alta",
+      "ubicacion": "node_modules/jest",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:jest-circus",
+      "severidad": "alta",
+      "ubicacion": "node_modules/jest-circus",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:jest-cli",
+      "severidad": "alta",
+      "ubicacion": "node_modules/jest-cli",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:jest-config",
+      "severidad": "alta",
+      "ubicacion": "node_modules/jest-config",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:jest-environment-node",
+      "severidad": "alta",
+      "ubicacion": "node_modules/jest-environment-node",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:jest-haste-map",
+      "severidad": "alta",
+      "ubicacion": "node_modules/jest-haste-map",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:jest-message-util",
+      "severidad": "alta",
+      "ubicacion": "node_modules/jest-message-util",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:jest-resolve",
+      "severidad": "alta",
+      "ubicacion": "node_modules/jest-resolve",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:jest-resolve-dependencies",
+      "severidad": "alta",
+      "ubicacion": "node_modules/jest-resolve-dependencies",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:jest-runner",
+      "severidad": "alta",
+      "ubicacion": "node_modules/jest-runner",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:jest-runtime",
+      "severidad": "alta",
+      "ubicacion": "node_modules/jest-runtime",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:jest-snapshot",
+      "severidad": "alta",
+      "ubicacion": "node_modules/jest-snapshot",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:jest-watcher",
+      "severidad": "alta",
+      "ubicacion": "node_modules/jest-watcher",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:jsonwebtoken",
+      "severidad": "alta",
+      "ubicacion": "node_modules/jsonwebtoken",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:micromatch",
+      "severidad": "alta",
+      "ubicacion": "node_modules/micromatch",
+      "descripcion": "Dependencia vulnerable (high)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "DAST/dast-scan",
+      "regla": "DAST-IDOR-READ (CWE-639)",
+      "severidad": "alta",
+      "ubicacion": "API en ejecucion",
+      "descripcion": "Acceso entre usuarios: lectura de equipo ajeno",
+      "estado": "confirmado"
+    },
+    {
+      "origen": "DAST/dast-scan",
+      "regla": "DAST-IDOR-DELETE (CWE-639)",
+      "severidad": "alta",
+      "ubicacion": "API en ejecucion",
+      "descripcion": "Acceso entre usuarios: borrado de equipo ajeno",
+      "estado": "confirmado"
+    },
+    {
+      "origen": "DAST/dast-scan",
+      "regla": "DAST-SQLI (CWE-89)",
+      "severidad": "alta",
+      "ubicacion": "API en ejecucion",
+      "descripcion": "Inyeccion SQL en filtro de busqueda",
+      "estado": "confirmado"
+    },
+    {
+      "origen": "SAST/semgrep",
+      "regla": "home.claude.ariel2006.pokeapi.security.semgrep.jwt-sin-algoritmo-explicito",
+      "severidad": "media",
+      "ubicacion": "src/app.js:33",
+      "descripcion": "jwt.verify sin lista de algoritmos permitida (CWE-347). Pasar { algorithms: [\"HS256\"] } para evitar confusion de algoritmo.",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:@istanbuljs/load-nyc-config",
+      "severidad": "media",
+      "ubicacion": "node_modules/@istanbuljs/load-nyc-config",
+      "descripcion": "Dependencia vulnerable (moderate)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:argparse",
+      "severidad": "media",
+      "ubicacion": "node_modules/argparse",
+      "descripcion": "Dependencia vulnerable (moderate)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:babel-plugin-istanbul",
+      "severidad": "media",
+      "ubicacion": "node_modules/babel-plugin-istanbul",
+      "descripcion": "Dependencia vulnerable (moderate)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:js-yaml",
+      "severidad": "media",
+      "ubicacion": "node_modules/js-yaml",
+      "descripcion": "Dependencia vulnerable (moderate)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "SCA/npm-audit",
+      "regla": "dependencia:sprintf-js",
+      "severidad": "media",
+      "ubicacion": "node_modules/sprintf-js",
+      "descripcion": "Dependencia vulnerable (moderate)",
+      "estado": "candidato"
+    },
+    {
+      "origen": "DAST/dast-scan",
+      "regla": "DAST-INPUT-1 (CWE-20)",
+      "severidad": "media",
+      "ubicacion": "API en ejecucion",
+      "descripcion": "Validacion de entradas: id de pokemon fuera de rango",
+      "estado": "confirmado"
+    },
+    {
+      "origen": "DAST/dast-scan",
+      "regla": "DAST-INPUT-2 (CWE-20)",
+      "severidad": "media",
+      "ubicacion": "API en ejecucion",
+      "descripcion": "Validacion de entradas: mas de 6 pokemon",
+      "estado": "confirmado"
+    },
+    {
+      "origen": "DAST/dast-scan",
+      "regla": "DAST-INPUT-3 (CWE-20)",
+      "severidad": "media",
+      "ubicacion": "API en ejecucion",
+      "descripcion": "Validacion de entradas: nombre con <script>",
+      "estado": "confirmado"
+    }
+  ]
+}
