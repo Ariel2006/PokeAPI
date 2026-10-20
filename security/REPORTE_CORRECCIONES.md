@@ -1,6 +1,7 @@
 # Reporte de correcciones — antes y después
 
-**Materia:** Desarrollo de Software Seguro (NRC 36900) · Parcial 1, Actividad 2
+**Materia:** Ingeniería de la Seguridad del Software (NRC 36892) · Parcial 1, Actividad 2
+**Docente:** Ing. Luis Jaramillo · **Estudiante:** Ariel Alexander Jara Caiza (individual)
 **Aplicación:** PokeAPI / `poke-server` · Repositorio: Ariel2006/PokeAPI
 
 Este reporte documenta la corrección de las fallas detectadas por el pipeline

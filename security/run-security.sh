@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # =====================================================================
 #  Script unico de seguridad - PokeAPI / poke-server
-#  Parcial 1, Actividad 2 - Desarrollo de Software Seguro
+#  Parcial 1, Actividad 2 - Ingenieria de la Seguridad del Software (NRC 36892)
 #
 #  Ejecuta en secuencia y con un solo comando:
 #    1. SAST  -> Semgrep (reglas locales) + ESLint (plugin security)
