@@ -51,6 +51,14 @@ npm start          # http://127.0.0.1:3001, base en memoria ya sembrada
 Usuarios sintéticos de laboratorio: `ash` / `pikachu123`, `misty` / `staryu456`,
 `brock` / `onix789`.
 
+## Confirmación manual
+
+```bash
+bash security/confirmar-manual.sh
+```
+
+Arranca la API, repite con `curl` las peticiones de los hallazgos H-01 (IDOR) y H-02 (inyección SQL) y muestra el código HTTP de cada una. En la versión con fallas devuelve 200 con datos ajenos; en la corregida, 403 y una lista vacía.
+
 ## Casos de prueba
 
 | ID | Qué verifica | Esperado |
