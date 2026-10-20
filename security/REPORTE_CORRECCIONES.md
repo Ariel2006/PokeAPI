@@ -72,7 +72,7 @@ GET /api/teams?name=' OR '1'='1 -> HTTP 200, 0 equipos ajenos devueltos
 ## Corrección 3 — Dependencia vulnerable (SCA)
 
 - **Identificador:** VULN dependencia · `jsonwebtoken@8.5.1`
-- **Detección:** SCA `npm audit` (advisories CVE-2022-23529 y relacionados).
+- **Detección:** SCA `npm audit`, severidad alta; avisos GHSA-8cf7-32gw-wr33, GHSA-hjrf-2m68-5959 y GHSA-qwph-4952-7xr6.
 - **Causa:** versión de `jsonwebtoken` con vulnerabilidades conocidas.
 
 **Corrección:** actualización a `jsonwebtoken` 9.0.3 (rango `^9.0.3` en `package.json`). Tras la
