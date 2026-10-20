@@ -1,0 +1,22 @@
+(node:849) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/authz.test.js
+  Autenticacion (control base)
+    ✓ CP-07 rechaza acceso sin token (401) (152 ms)
+  Acceso entre usuarios (IDOR / Broken Access Control)
+    ✓ CP-01 un usuario NO puede leer el equipo de otro (154 ms)
+    ✓ CP-02 un usuario NO puede borrar el equipo de otro (144 ms)
+    ✓ CP-01b un usuario SI puede leer su propio equipo (200) (139 ms)
+  Inyeccion SQL
+    ✓ CP-03 el filtro name no permite inyeccion booleana (146 ms)
+  Validacion de entradas
+    ✓ CP-04 rechaza id de pokemon fuera de rango (139 ms)
+    ✓ CP-05 rechaza equipos con mas de 6 pokemon (137 ms)
+    ✓ CP-06 rechaza nombre con contenido tipo script (XSS almacenado) (134 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       8 passed, 8 total
+Snapshots:   0 total
+Time:        1.641 s
+Ran all test suites.
+Test results written to: ../security/results/tests-jest.json

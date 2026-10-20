@@ -1,0 +1,41 @@
+name: Seguridad poke-server
+
+# Pipeline de seguridad para el Parcial 1, Actividad 2.
+# Ejecuta SAST, SCA, pruebas automatizadas y DAST, y falla el build
+# (el "gate") si queda alguna vulnerabilidad confirmada alta/critica.
+
+on:
+  push:
+    paths:
+      - "poke-server/**"
+      - "security/**"
+      - ".github/workflows/security.yml"
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  seguridad:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Instalar dependencias del backend
+        working-directory: poke-server
+        run: npm install
+
+      - name: Instalar Semgrep
+        run: pipx install semgrep || pip install semgrep
+
+      - name: Ejecutar pipeline unico de seguridad
+        run: bash security/run-security.sh
+
+      - name: Publicar resultados
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resultados-seguridad
+          path: security/results/

@@ -1,0 +1,44 @@
+rules:
+  - id: sqli-concatenacion-string
+    languages: [javascript]
+    severity: ERROR
+    message: >
+      Posible inyeccion SQL (CWE-89): la consulta se arma concatenando
+      una variable. Usar consultas parametrizadas con '?'.
+    patterns:
+      - pattern-either:
+          - pattern: $SQL + $VAR
+          - pattern: $SQL += $VAR
+      - metavariable-regex:
+          metavariable: $SQL
+          regex: (?i).*(select|insert|update|delete|where|like).*
+
+  - id: secreto-embebido
+    languages: [javascript]
+    severity: ERROR
+    message: >
+      Secreto embebido en el codigo fuente (CWE-798). Mover a una
+      variable de entorno (process.env).
+    patterns:
+      - pattern: const $NAME = "..."
+      - metavariable-regex:
+          metavariable: $NAME
+          regex: (?i).*(secret|token|password|apikey|api_key).*
+
+  - id: jwt-sin-algoritmo-explicito
+    languages: [javascript]
+    severity: WARNING
+    message: >
+      jwt.verify sin lista de algoritmos permitida (CWE-347). Pasar
+      { algorithms: ["HS256"] } para evitar confusion de algoritmo.
+    patterns:
+      - pattern: jwt.verify($T, $S)
+
+  - id: password-texto-plano
+    languages: [javascript]
+    severity: ERROR
+    message: >
+      La contrasena parece compararse/almacenarse en texto plano
+      (CWE-256/CWE-916). Usar un hash lento con sal (scrypt, bcrypt, argon2).
+    patterns:
+      - pattern: return $PLAIN === $STORED
