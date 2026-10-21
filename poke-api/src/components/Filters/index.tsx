@@ -50,8 +50,6 @@ export const Filters = () => {
         )}
       </div>
      </div>
-<button data-testid="filter-toggle"> {filterSelected.name}
-</button>
 
   );
 };
